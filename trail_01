@@ -1,0 +1,16 @@
+#!/usr/bin/python3
+import subprocess
+
+print("02-to get ls command");
+print("01-to get date");
+print("03-to get pwd command");
+input_:int(input("Enter Your Output : "));
+if(input_ == 2){
+	print(subprocess.getoutput("ls"));
+}
+elif(input_ == 1){
+	print(subprocess.getoutput("date"));
+}
+else{
+	print(subprocess.getoutput("pwd"));
+}
