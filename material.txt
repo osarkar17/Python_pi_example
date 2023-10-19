@@ -1,0 +1,14 @@
+Step
+1. sudo lvcreate -L 1000M -n mylv myvg => to create LVM of respective size.
+2. sudo mkfs.ext4 /dev/myvg/mylv => to create format extebsion.
+3. sudo mkdir /mnt_1 => Making of directory new to mount.
+4. sudo mount /dev/myvg/mylv /mnt_1
+
+
+Mounting NFS , commands on server machine
+1. 
+
+
+Connecting commands ON CLIENT machine , SSh
+1. 
+
