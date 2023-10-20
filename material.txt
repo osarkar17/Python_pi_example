@@ -28,6 +28,10 @@ def setup_nfs_share(share_path, client_ip):
     # Add client IP to NFS exports
     with open('/etc/exports', 'a') as exports_file:
         exports_file.write(f'{share_path} {client_ip}(rw,sync,no_root_squash,no_subtree_check)\n')
+export_line = f'{share_path} {client_ip}(rw,sync,no_root_squash,no_subtree_check)\n'
+    subprocess.run(['echo', export_line, '|', 'sudo', 'tee', '-a', '/etc/exports'], shell=True, check=True)
+
+
 
     # Restart NFS service
     subprocess.run(['sudo', 'systemctl', 'restart', 'nfs-kernel-server'], check=True)
