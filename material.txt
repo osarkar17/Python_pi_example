@@ -12,3 +12,28 @@ Mounting NFS , commands on server machine
 Connecting commands ON CLIENT machine , SSh
 1. 
 
+
+
+
+
+import subprocess
+
+def setup_nfs_share(share_path, client_ip):
+    # Install nfs-kernel-server (if not already installed)
+    subprocess.run(['sudo', 'apt', 'install', 'nfs-kernel-server', '-y'], check=True)
+
+    # Create the shared directory (if it doesn't exist)
+    subprocess.run(['sudo', 'mkdir', '-p', share_path], check=True)
+
+    # Add client IP to NFS exports
+    with open('/etc/exports', 'a') as exports_file:
+        exports_file.write(f'{share_path} {client_ip}(rw,sync,no_root_squash,no_subtree_check)\n')
+
+    # Restart NFS service
+    subprocess.run(['sudo', 'systemctl', 'restart', 'nfs-kernel-server'], check=True)
+
+if __name__ == "__main__":
+    share_path = "/path/to/your/share"  # Replace with your desired share path
+    client_ip = "client_ip_address"     # Replace with the client's IP address
+
+    setup_nfs_share(share_path, client_ip)
