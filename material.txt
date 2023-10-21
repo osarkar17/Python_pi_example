@@ -62,3 +62,16 @@ if __name__ == "__main__":
     command = "ls"  # Replace with the command you want to run
 
     ssh_with_password(username, ip_address, password, command)
+
+
+
+import os
+
+def ssh_to_client(username, ip_address):
+    os.system(f'ssh {username}@{ip_address}')
+
+if __name__ == "__main__":
+    username = "your_username"  # Replace with the actual username
+    ip_address = "client_ip_address"  # Replace with the client's IP address
+
+    ssh_to_client(username, ip_address)
