@@ -41,3 +41,24 @@ if __name__ == "__main__":
     client_ip = "client_ip_address"     # Replace with the client's IP address
 
     setup_nfs_share(share_path, client_ip)
+
+
+
+
+import pexpect
+
+def ssh_with_password(username, ip_address, password, command):
+    ssh_command = f'ssh {username}@{ip_address} {command}'
+    child = pexpect.spawn(ssh_command)
+    child.expect('password:')
+    child.sendline(password)
+    child.expect(pexpect.EOF)
+    child.close()
+
+if __name__ == "__main__":
+    username = "your_username"  # Replace with the actual username
+    ip_address = "client_ip_address"  # Replace with the client's IP address
+    password = "your_password"  # Replace with the actual password
+    command = "ls"  # Replace with the command you want to run
+
+    ssh_with_password(username, ip_address, password, command)
