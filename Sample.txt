@@ -1,0 +1,52 @@
+#include <AIS_Shape.hxx>
+#include <BRepPrimAPI_MakeBox.hxx>
+#include <V3d_Viewer.hxx>
+#include <WNT_Window.hxx>
+#include <Aspect_DisplayConnection.hxx>
+#include <OpenGl_GraphicDriver.hxx>
+#include <TCollection_ExtendedString.hxx>
+
+#include <vtkRenderWindow.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkInteractorStyleTrackballCamera.h>
+#include <vtkSmartPointer.h>
+
+int main(int argc, char **argv) {
+    // Create a cube using OpenCASCADE
+    TopoDS_Shape aBox = BRepPrimAPI_MakeBox(1.0, 1.0, 1.0).Shape();
+    Handle(AIS_Shape) aShape = new AIS_Shape(aBox);
+
+    // Initialize the VTK render window and interactor
+    vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
+    vtkSmartPointer<vtkRenderWindow> renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
+    renderWindow->AddRenderer(renderer);
+    vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor = vtkSmartPointer<vtkRenderWindowInteractor>::New();
+    renderWindowInteractor->SetRenderWindow(renderWindow);
+
+    // Set up the interactor style
+    vtkSmartPointer<vtkInteractorStyleTrackballCamera> style = vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New();
+    renderWindowInteractor->SetInteractorStyle(style);
+
+    // Create a connection to the display
+    Handle(Aspect_DisplayConnection) aDisplayConnection = new Aspect_DisplayConnection();
+    Handle(OpenGl_GraphicDriver) aGraphicDriver = new OpenGl_GraphicDriver(aDisplayConnection);
+
+    // Create a viewer
+    Handle(V3d_Viewer) aViewer = new V3d_Viewer(aGraphicDriver);
+    Handle(WNT_Window) aWindow = new WNT_Window("OpenCASCADE + VTK Example", aViewer, aDisplayConnection);
+
+    aViewer->SetDefaultLights();
+    aViewer->CreateView();
+    Handle(V3d_View) aView = aViewer->View();
+    aView->SetWindow(aWindow);
+    aView->SetBackgroundColor(Quantity_NOC_BLACK);
+    aView->MustBeResized();
+    aShape->SetColor(Quantity_NOC_BLUE1);
+    aViewer->Display(aShape);
+
+    renderWindow->Render();
+    renderWindowInteractor->Start();
+
+    return 0;
+}
