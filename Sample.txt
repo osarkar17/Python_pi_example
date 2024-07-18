@@ -50,3 +50,32 @@ int main(int argc, char **argv) {
 
     return 0;
 }
+
+cmake content:
+//
+cmake_minimum_required(VERSION 3.10)
+project(OCCT_VTK_Example)
+
+# Find OpenCASCADE
+find_package(OpenCASCADE REQUIRED)
+include_directories(${OpenCASCADE_INCLUDE_DIR})
+
+# Find VTK
+find_package(VTK REQUIRED)
+include(${VTK_USE_FILE})
+
+# Define the executable
+add_executable(occt_vtk_example main.cpp)
+
+# Link the libraries
+target_link_libraries(occt_vtk_example ${OpenCASCADE_LIBRARIES} ${VTK_LIBRARIES})
+
+
+//
+mkdir build
+cd build
+cmake ..
+make
+//
+./occt_vtk_example
+
