@@ -79,3 +79,60 @@ make
 //
 ./occt_vtk_example
 
+
+
+//22/07/2024
+#include <iostream>
+#include<vtkAutoInit.h>
+#include<BRepPrimAPI_MakeBox.hxx>
+#include<IVtkTools_ShapeDataSource.hxx>
+#include<STEPControl_Reader.hxx>
+#include<vtkRenderWindow.h>
+#include<vtkRenderer.h>
+#include<vtkInteractorStyleTrackballCamera.h>
+#include<vtkRenderWindowInteractor.h>
+#include<vtkPolyDataMapper.h>
+
+VTK_MODULE_INIT(vtkRenderingOpenGL2);
+VTK_MODULE_INIT(vtkInteractionStyle);
+
+int main()
+{
+    BRepPrimAPI_MakeBox box(1., 1., 1.);
+    //const TopoDS_Shape& shape = box.Shape();
+#pragma region Getting step file
+    STEPControl_Reader reader;
+    IFSelect_ReturnStatus status = reader.ReadFile("D:\SOFTWARES\OCCTDEMO\VisualStudioCode\OCCTSampleSolution\SyringeBody.STEP");
+    if (status != IFSelect_RetDone)
+    {
+        std::cerr << "Error: Cannot read STEP file." << std::endl;
+        return 1;
+    }
+    reader.TransferRoots();
+    TopoDS_Shape shape = reader.OneShape();
+#pragma endregion
+
+
+
+
+
+    vtkNew<vtkRenderWindow> renderWindow;
+    vtkNew<vtkRenderer> renderer;
+    renderWindow->AddRenderer(renderer);
+    vtkNew<vtkInteractorStyleTrackballCamera> isStyle;
+    vtkNew<vtkRenderWindowInteractor> irenderer;
+
+    vtkNew<IVtkTools_ShapeDataSource> occSource;
+    occSource->SetShape(new IVtkOCC_Shape(shape));
+    vtkNew<vtkPolyDataMapper> mapper;
+    mapper->SetInputConnection(occSource->GetOutputPort());
+    vtkNew<vtkActor> actor;
+    actor->SetMapper(mapper);
+    renderer->AddActor(actor);
+
+    irenderer->SetRenderWindow(renderWindow);
+    irenderer->SetInteractorStyle(isStyle);
+    renderWindow->Render();
+    irenderer->Start();
+    return 0;
+}
