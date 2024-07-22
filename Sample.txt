@@ -136,3 +136,25 @@ int main()
     irenderer->Start();
     return 0;
 }
+
+
+
+
+#include <Standard_Version.hxx>
+#include <Standard_PrimitiveTypes.hxx>
+#include <gp_Pnt.hxx>
+#include <iostream>
+
+int main() {
+    gp_Pnt point(1.0, 2.0, 3.0);
+    std::cout << "Point coordinates: (" << point.X() << ", " << point.Y() << ", " << point.Z() << ")" << std::endl;
+
+    std::cout << "OpenCASCADE version: " << Standard_Version() << std::endl;
+
+    return 0;
+}
+
+
+g++ -c main.cpp -o main.o -I/path/to/OpenCASCADE/include
+g++ main.o -o myprogram -L/path/to/OpenCASCADE/lib -lopencascade
+./myprogram
